@@ -2,10 +2,9 @@
   "name": "storefront_backend",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/server.js",
-  "type": "module",
+  "main": "server.ts",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "ts-node src/server.ts",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "test": "jasmine-ts",
     "tsc": "tsc"
@@ -25,7 +24,8 @@
     "jasmine": "^3.6.4",
     "jasmine-spec-reporter": "^6.0.0",
     "jasmine-ts": "^0.3.0",
-    "ts-node": "^9.1.1",
+    "latest": "^0.2.0",
+    "ts-node": "^10.9.1",
     "tsc-watch": "^4.2.9"
   }
 }
