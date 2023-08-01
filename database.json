@@ -1,17 +1,16 @@
 {
-    "dev": {
-      "driver": "pg",
-      "host": "127.0.0.1",
-      "database": "dbtest",
-      "user": "postgres",
-      "password": "1967"
-    },
-    "test": {
-      "driver": "pg",
-      "host": "127.0.0.1",
-      "database": "dbtest",
-      "user": "postgres",
-      "password": "1967"
-    }
+  "dev": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "database": "dbtest",
+    "user": "postgres",
+    "password": "1967"
+  },
+  "test": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "database": "dbtest_test",
+    "user": "postgres",
+    "password": "1967"
   }
-  
+}

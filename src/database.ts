@@ -13,8 +13,10 @@ const {
   } = process.env
 
   
-let client
+let client: any;
 console.log(ENV)
+
+console.log(`Connected to ${POSTGRES_DB} database.`);
 
 
 if(ENV === 'test') {
@@ -29,10 +31,11 @@ if(ENV === 'test') {
   if(ENV === 'dev') {
     client = new Pool({
       host: POSTGRES_HOST,
-      database: POSTGRES_TEST_DB,
+      database: POSTGRES_DB,
       user: POSTGRES_USER,
       password: POSTGRES_PASSWORD,
     })
   }
+ 
 
 export default client;
