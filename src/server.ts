@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import users_routes from './handlers/users'
+import products_routes from './handlers/products'
 
 const app: express.Application = express()
 const address: string = "0.0.0.0:3000"
@@ -12,6 +13,7 @@ app.get('/', function (req: Request, res: Response) {
 })
 
 users_routes(app)
+products_routes(app)
 
 app.listen(3000, function () {
     console.log(`starting app on: ${address}`)

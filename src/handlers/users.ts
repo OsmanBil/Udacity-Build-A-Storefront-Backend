@@ -5,24 +5,35 @@ import jwt from 'jsonwebtoken'
 
 const store = new UserStore()
 
-
 // It calls the UserStore instance's index method to retrieve all the users and sends them back as a JSON response.
 const index = async (_req: Request, res: Response) => {
+    try {
+        const authorizationHeader: any = _req.headers.authorization
+        const token = authorizationHeader.split(' ')[1]
+        jwt.verify(token, process.env.TOKEN_SECRET as string)
+    } catch (err) {
+        res.status(401)
+        res.json('Access denied, invalid token')
+        return
+    }
     const users = await store.index()
     res.json(users)
 }
 
+const show = async (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const user = await store.show(userId);
+    res.json(user);
+};
 
-
-// The function creates a new Book object from the received data, then calls the BookStore instance's create method to store the book in the database, and sends back the newly created book as a JSON response. If an error occurs during the build process, an error message is returned as a JSON response with a 400 status code.
+// The function creates a new User object from the received data, then calls the UserStore instance's create method to store the user in the database, and sends back the newly created user as a JSON response. If an error occurs during the build process, an error message is returned as a JSON response with a 400 status code.
 const create = async (req: Request, res: Response) => {
-const user: User = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    password: req.body.password,
-    username: req.body.username,
-}
-
+    const user: User = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password,
+        username: req.body.username,
+    }
 
     try {
         const newUser = await store.create(user)
@@ -38,21 +49,23 @@ const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
     try {
         const authorizationHeader: any = req.headers.authorization
         const token = authorizationHeader.split(' ')[1]
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET as string)
-
-        next()
-    } catch (error) {
+        jwt.verify(token, process.env.TOKEN_SECRET as string)
+        next();
+    } catch (err) {
         res.status(401)
+        res.json('Access denied, invalid token')
+        return
     }
 }
 
 
 const authenticate = async (req: Request, res: Response) => {
-    const user: User = {     
+    const user: User = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: req.body.password,
-        username: req.body.username, }
+        username: req.body.username,
+    }
     try {
         const u = await store.authenticate(user.username, user.password)
         var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as string);
@@ -70,10 +83,11 @@ const update = async (req: Request, res: Response) => {
     const userUpdate: Partial<User> = {
         username: req.body.username,
         password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
     };
 
     try {
-        
         const authorizationHeader: any = req.headers.authorization;
         const token = authorizationHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET as string);
@@ -81,7 +95,7 @@ const update = async (req: Request, res: Response) => {
         if (typeof decoded === 'string') {
             throw new Error('Invalid JWT payload.');
         }
-        // Überprüfen, ob das dekodierte Benutzerobjekt vorhanden und die ID übereinstimmt
+        // Verify that the decoded user object exists and the ID matches
         if (decoded.user && decoded.user.id === userId) {
             const updatedUser = await store.update(userId, userUpdate);
             res.json(updatedUser);
@@ -95,27 +109,12 @@ const update = async (req: Request, res: Response) => {
     }
 };
 
-
-
-
-
 // The code exports the books_routes function as a default export so that it can be imported into other files and used in an Express application to define the routes for the books API.
 const users_routes = (app: express.Application) => {
-    app.get('/users', index)
-    //app.get('/books/:id', show)
+    app.get('/users', verifyAuthToken, index)
+    app.get('/users/:id', verifyAuthToken, show)
     app.post('/users', create)
-    // app.delete('/books', destroy)
-    //app.put('/users/:id', verifyAuthToken, update)
     app.put('/users/:id', verifyAuthToken, update)
 }
-
-
-// const mount = (app: express.Application) => {
-//     app.get('/users', index)
-//     app.get('/users/:id', show)
-//     app.post('/users', verifyAuthToken, create)
-//     app.put('/users/:id', verifyAuthToken, update)
-//     app.delete('/users/:id', verifyAuthToken, destroy)
-// }
 
 export default users_routes
