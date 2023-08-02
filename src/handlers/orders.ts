@@ -12,16 +12,15 @@ const index = async (_req: Request, res: Response) => {
 }
 
 
- const show = async (_req: Request, res: Response) => {
-     console.log(_req.params)
-     const order = await store.show(_req.params.id)
-     res.json(order)
- }
+const show = async (_req: Request, res: Response) => {
+    console.log(_req.params)
+    const order = await store.show(_req.params.id)
+    res.json(order)
+}
 
- const create = async (req: Request, res: Response) => {
+const create = async (req: Request, res: Response) => {
     const order: Order = {
         status: req.body.status,
-        product_id: [],
         user_id: 0,
     };
     try {
@@ -29,7 +28,6 @@ const index = async (_req: Request, res: Response) => {
         const token = authorizationHeader.split(' ')[1];
         const decoded: any = jwt.verify(token, process.env.TOKEN_SECRET as string);
 
-        // Überprüfen, ob der Benutzer im JWT-Token vorhanden ist und eine ID hat
         if (decoded && decoded.user && decoded.user.id) {
             order.user_id = decoded.user.id;
         } else {
@@ -52,7 +50,7 @@ const addProduct = async (_req: Request, res: Response) => {
     const quantity: any = parseInt(_req.body.quantity)
 
     try {
-        const addedProduct = await store.addProduct(quantity, orderId, productId )
+        const addedProduct = await store.addProduct(quantity, orderId, productId)
         res.json(addedProduct)
     } catch (err) {
         res.status(400)
@@ -60,25 +58,23 @@ const addProduct = async (_req: Request, res: Response) => {
     }
 }
 
-
-const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
+const getOrderProducts = async (req: Request, res: Response) => {
+    const orderId = parseInt(req.params.id);
     try {
-        const authorizationHeader: any = req.headers.authorization
-        const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.TOKEN_SECRET as string)
-        next();
+        const orderProducts = await store.getOrderProducts(orderId);
+        res.json(orderProducts);
     } catch (err) {
-        res.status(401)
-        res.json('Access denied, invalid token')
-        return
+        res.status(400)
+        res.json(err)
     }
-}
 
+};
 
 const order_routes = (app: express.Application) => {
     app.get('/orders', index)
-    //app.get('/orders/:id', show)
+    app.get('/orders/:id', authMiddleware, show)
     app.post('/orders', authMiddleware, create)
+    app.get('/orders/:id/products', authMiddleware, getOrderProducts);
     // add product
     app.post('/orders/:id/products', addProduct)
 }

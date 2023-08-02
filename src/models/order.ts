@@ -2,7 +2,6 @@ import Client from '../database'
 
 export type Order = {
     id?: number;
-    product_id: number[]; // An array of product IDs
     user_id: number; // The ID of the user who placed the order
     status: string;
 }
@@ -25,9 +24,9 @@ export class OrderStore {
     async create(order: Order): Promise<Order> {
         try {
             const conn = await Client.connect();
-            const sql = 'INSERT INTO orders (product_id, user_id, status) VALUES($1, $2, $3) RETURNING *';
+            const sql = 'INSERT INTO orders (user_id, status) VALUES($1, $2, $3) RETURNING *';
 
-            const result = await conn.query(sql, [order.product_id, order.user_id, order.status]);
+            const result = await conn.query(sql, [order.user_id, order.status]);
             const createdOrder = result.rows[0];
 
             conn.release();
@@ -80,6 +79,18 @@ export class OrderStore {
             return addedProduct;
         } catch (err) {
             throw new Error(`Could not add new product ${productId} to order ${orderId}: ${err}`);
+        }
+    }
+
+    async getOrderProducts(orderId: number): Promise<any[]> {
+        try {
+            const conn = await Client.connect();
+            const sql = 'SELECT * FROM order_products WHERE order_id = $1';
+            const result = await conn.query(sql, [orderId]);
+            conn.release();
+            return result.rows;
+        } catch (err) {
+            throw new Error(`Could not get order products for order ${orderId}: ${err}`);
         }
     }
 
