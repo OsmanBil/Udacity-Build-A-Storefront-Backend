@@ -6,12 +6,12 @@ export type User = {
     lastName: string;
     password: string;
     id?: number;
-    username: any;
+    username: string;
 }
 
 
 const pepper = 'your-pepper-value'; // A pepper value used to add extra randomness to password hashing
-const saltRounds: any = 10; // The number of salt rounds used for password hashing
+const saltRounds: number = 10; // The number of salt rounds used for password hashing
 
 
 export class UserStore {
