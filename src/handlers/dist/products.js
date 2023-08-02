@@ -39,6 +39,7 @@ exports.__esModule = true;
 var product_1 = require("../models/product");
 var users_1 = require("./users");
 var store = new product_1.ProductStore();
+// Route handler to get all products from the database and send them as a JSON response
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var products;
     return __generator(this, function (_a) {
@@ -51,6 +52,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// Route handler to get a specific product by ID from the database and send it as a JSON response
 var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var productId, product;
     return __generator(this, function (_a) {
@@ -65,6 +67,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); };
+// Route handler to create a new product in the database and send back the newly created product as a JSON response
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var product, newProduct, err_1;
     return __generator(this, function (_a) {
@@ -92,6 +95,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// Route handler to delete a product from the database by ID and send back the deleted product as a JSON response
 var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var deleted, err_2;
     return __generator(this, function (_a) {
@@ -112,10 +116,11 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
         }
     });
 }); };
+// Define the products routes using the given application instance
 var products_routes = function (app) {
-    app.get('/products', index);
-    app.get('/products/:id', show);
-    app.post('/products', users_1.verifyAuthToken, create);
-    app["delete"]('/products', users_1.verifyAuthToken, destroy);
+    app.get('/products', index); // Define the GET route for getting all products
+    app.get('/products/:id', show); // Define the GET route for getting a specific product by ID
+    app.post('/products', users_1.verifyAuthToken, create); // Define the POST route for creating a new product with authentication middleware
+    app["delete"]('/products', users_1.verifyAuthToken, destroy); // Define the DELETE route for deleting a product with authentication middleware
 };
 exports["default"] = products_routes;
