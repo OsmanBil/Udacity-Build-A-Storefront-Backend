@@ -40,6 +40,7 @@ var order_1 = require("../models/order");
 var jsonwebtoken_1 = require("jsonwebtoken");
 var users_1 = require("./users");
 var store = new order_1.OrderStore();
+// Route handler to get all orders from the database and send them as a JSON response
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var orders;
     return __generator(this, function (_a) {
@@ -52,6 +53,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// Route handler to get a specific order by ID from the database and send it as a JSON response
 var show = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var order;
     return __generator(this, function (_a) {
@@ -66,6 +68,7 @@ var show = function (_req, res) { return __awaiter(void 0, void 0, void 0, funct
         }
     });
 }); };
+// Route handler to create a new order in the database and send back the newly created order as a JSON response
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var order, authorizationHeader, token, decoded, newOrder, err_1;
     return __generator(this, function (_a) {
@@ -101,6 +104,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// Route handler to add a product to an order in the database and send back the added product as a JSON response
 var addProduct = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var orderId, productId, quantity, addedProduct, err_2;
     return __generator(this, function (_a) {
@@ -126,6 +130,7 @@ var addProduct = function (_req, res) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
+// Route handler to get all products of an order from the database and send them as a JSON response
 var getOrderProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var orderId, orderProducts, err_3;
     return __generator(this, function (_a) {
@@ -149,6 +154,7 @@ var getOrderProducts = function (req, res) { return __awaiter(void 0, void 0, vo
         }
     });
 }); };
+// Route handler to get all active orders of a user from the database and send them as a JSON response
 var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, activeOrders, err_4;
     return __generator(this, function (_a) {
@@ -172,6 +178,7 @@ var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 
         }
     });
 }); };
+// Route handler to update an order's information in the database and send back the updated order as a JSON response
 var update = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var orderId, orderUpdate, updatedOrder, err_5;
     return __generator(this, function (_a) {
@@ -198,14 +205,14 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// Define the order routes using the given application instance
 var order_routes = function (app) {
-    app.get('/orders', index);
-    app.get('/orders/:id', users_1.verifyAuthToken, show);
-    app.get('/orders/users/:id', users_1.verifyAuthToken, getActiveOrdersByUser);
-    app.post('/orders', users_1.verifyAuthToken, create);
-    app.get('/orders/:id/products', users_1.verifyAuthToken, getOrderProducts);
-    app.put('/orders/:id', users_1.verifyAuthToken, update);
-    // add product
-    app.post('/orders/:id/products', addProduct);
+    app.get('/orders', index); // Define the GET route for getting all orders
+    app.get('/orders/:id', users_1.verifyAuthToken, show); // Define the GET route for getting a specific order by ID with authentication middleware
+    app.get('/orders/users/:id', users_1.verifyAuthToken, getActiveOrdersByUser); // Define the GET route for getting all active orders of a user with authentication middleware
+    app.post('/orders', users_1.verifyAuthToken, create); // Define the POST route for creating a new order with authentication middleware
+    app.get('/orders/:id/products', users_1.verifyAuthToken, getOrderProducts); // Define the GET route for getting all products of an order with authentication middleware
+    app.put('/orders/:id', users_1.verifyAuthToken, update); // Define the PUT route for updating an order by ID with authentication middleware
+    app.post('/orders/:id/products', addProduct); // Define the POST route for adding a product to an order
 };
 exports["default"] = order_routes;
