@@ -110,7 +110,7 @@ var addProduct = function (_req, res) { return __awaiter(void 0, void 0, void 0,
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                orderId = _req.params.id;
+                orderId = parseInt(_req.params.id, 10);
                 productId = _req.body.productId;
                 quantity = parseInt(_req.body.quantity);
                 _a.label = 1;

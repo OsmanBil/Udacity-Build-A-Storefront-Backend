@@ -18,5 +18,5 @@ products_1["default"](app);
 orders_1["default"](app);
 // Start the server and make it listen for incoming connections on port 3000
 app.listen(3000, function () {
-    console.log("starting app on: " + address);
+    console.log("Starting app on: " + address);
 });

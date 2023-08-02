@@ -46,9 +46,9 @@ const create = async (req: Request, res: Response) => {
 
 // Route handler to add a product to an order in the database and send back the added product as a JSON response
 const addProduct = async (_req: Request, res: Response) => {
-    const orderId: any = _req.params.id
-    const productId: string = _req.body.productId
-    const quantity: any = parseInt(_req.body.quantity)
+    const orderId: number = parseInt(_req.params.id, 10);
+    const productId: number = _req.body.productId
+    const quantity: number = parseInt(_req.body.quantity)
 
     try {
         const addedProduct = await store.addProduct(quantity, orderId, productId)

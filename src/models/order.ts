@@ -63,7 +63,7 @@ export class OrderStore {
     }
 
     // Function to add a product to an order in the database
-    async addProduct(quantity: number, orderId: string, productId: string): Promise<Order> {
+    async addProduct(quantity: number, orderId: number, productId: number): Promise<Order> {
         try {
             const getOrderSql = 'SELECT status FROM orders WHERE id = $1';
             const insertProductSql = 'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
