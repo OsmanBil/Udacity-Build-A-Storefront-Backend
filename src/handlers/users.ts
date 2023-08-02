@@ -37,7 +37,7 @@ const create = async (req: Request, res: Response) => {
 
     try {
         const newUser = await store.create(user)
-        var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as string, { expiresIn: '1h' });
+        var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as string);
         res.json(token)
     } catch (err) {
         res.status(400)
@@ -45,7 +45,7 @@ const create = async (req: Request, res: Response) => {
     }
 }
 
-const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
+export const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
     try {
         const authorizationHeader: any = req.headers.authorization
         const token = authorizationHeader.split(' ')[1]
