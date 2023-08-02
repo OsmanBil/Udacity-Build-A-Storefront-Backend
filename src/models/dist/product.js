@@ -41,6 +41,7 @@ var database_1 = require("../database");
 var ProductStore = /** @class */ (function () {
     function ProductStore() {
     }
+    // Function to get all products from the database
     ProductStore.prototype.index = function () {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, err_1;
@@ -65,6 +66,7 @@ var ProductStore = /** @class */ (function () {
             });
         });
     };
+    // Function to get a specific product by ID from the database
     ProductStore.prototype.show = function (id) {
         return __awaiter(this, void 0, Promise, function () {
             var sql, conn, result, err_2;
@@ -89,6 +91,7 @@ var ProductStore = /** @class */ (function () {
             });
         });
     };
+    // Function to create a new product in the database
     ProductStore.prototype.create = function (p) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, product, err_3;
@@ -115,6 +118,7 @@ var ProductStore = /** @class */ (function () {
             });
         });
     };
+    // Function to delete a product from the database by ID
     ProductStore.prototype["delete"] = function (id) {
         return __awaiter(this, void 0, Promise, function () {
             var sql, conn, result, product, err_4;

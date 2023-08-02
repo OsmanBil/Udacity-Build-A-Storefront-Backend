@@ -8,6 +8,7 @@ export type Product = {
 }
 
 export class ProductStore {
+    // Function to get all products from the database
     async index(): Promise<Product[]> {
         try {
             const conn = await Client.connect()
@@ -21,6 +22,7 @@ export class ProductStore {
         }
     }
 
+    // Function to get a specific product by ID from the database
     async show(id: string): Promise<Product> {
         try {
             const sql = 'SELECT * FROM products WHERE id=($1)'
@@ -33,6 +35,7 @@ export class ProductStore {
         }
     }
 
+    // Function to create a new product in the database
     async create(p: Product): Promise<Product> {
         try {
             const conn = await Client.connect()
@@ -47,6 +50,7 @@ export class ProductStore {
         }
     }
 
+    // Function to delete a product from the database by ID
     async delete(id: string): Promise<Product> {
         try {
             const sql = 'DELETE FROM products WHERE id=($1)'
@@ -56,8 +60,8 @@ export class ProductStore {
             const product = result.rows[0]
             conn.release()
             return product
-                
-        }   catch (err) {
+
+        } catch (err) {
             throw new Error(`Could not delete product ${id}: ${err}`)
         }
     }

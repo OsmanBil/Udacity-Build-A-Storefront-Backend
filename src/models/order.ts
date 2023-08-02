@@ -2,11 +2,12 @@ import Client from '../database'
 
 export type Order = {
     id?: number;
-    user_id: number; // The ID of the user who placed the order
+    user_id: number;
     status: string;
 }
 
 export class OrderStore {
+    // Function to get all orders from the database
     async index(): Promise<Order[]> {
         try {
             const conn = await Client.connect()
@@ -20,6 +21,7 @@ export class OrderStore {
         }
     }
 
+    // Function to create a new order in the database
     async create(order: Order): Promise<Order> {
         try {
             const conn = await Client.connect();
@@ -32,7 +34,8 @@ export class OrderStore {
             throw new Error(`Could not add new order: ${err}`);
         }
     }
-    
+
+    // Function to update the status of an order in the database
     async update(orderId: number, orderUpdate: Partial<Order>): Promise<Order> {
         try {
             const conn = await Client.connect();
@@ -45,8 +48,8 @@ export class OrderStore {
             throw new Error(`Could not update order ${orderId}: ${err}`);
         }
     }
-    
 
+    // Function to get a specific order by ID from the database
     async show(id: string): Promise<Order> {
         try {
             const sql = 'SELECT * FROM orders WHERE id=($1)'
@@ -58,7 +61,8 @@ export class OrderStore {
             throw new Error(`Could not find order ${id}: ${err}`)
         }
     }
-    
+
+    // Function to add a product to an order in the database
     async addProduct(quantity: number, orderId: string, productId: string): Promise<Order> {
         try {
             const getOrderSql = 'SELECT status FROM orders WHERE id = $1';
@@ -69,7 +73,7 @@ export class OrderStore {
             if (!order) {
                 throw new Error(`Order with ID ${orderId} not found.`);
             }
-    
+
             if (order.status !== 'active') {
                 throw new Error(`Order with ID ${orderId} has status '${order.status}', and cannot accept new products.`);
             }
@@ -82,6 +86,7 @@ export class OrderStore {
         }
     }
 
+    // Function to get all products for a specific order from the database
     async getOrderProducts(orderId: number): Promise<any[]> {
         try {
             const conn = await Client.connect();
@@ -94,6 +99,7 @@ export class OrderStore {
         }
     }
 
+    // Function to get all active orders for a specific user from the database
     async getActiveOrdersByUser(userId: string): Promise<Order[]> {
         try {
             const conn = await Client.connect();

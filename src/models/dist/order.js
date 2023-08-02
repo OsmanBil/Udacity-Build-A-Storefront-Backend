@@ -41,6 +41,7 @@ var database_1 = require("../database");
 var OrderStore = /** @class */ (function () {
     function OrderStore() {
     }
+    // Function to get all orders from the database
     OrderStore.prototype.index = function () {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, err_1;
@@ -65,6 +66,7 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
+    // Function to create a new order in the database
     OrderStore.prototype.create = function (order) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, createdOrder, err_2;
@@ -90,6 +92,7 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
+    // Function to update the status of an order in the database
     OrderStore.prototype.update = function (orderId, orderUpdate) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, updatedOrder, err_3;
@@ -115,6 +118,7 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
+    // Function to get a specific order by ID from the database
     OrderStore.prototype.show = function (id) {
         return __awaiter(this, void 0, Promise, function () {
             var sql, conn, result, err_4;
@@ -139,6 +143,7 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
+    // Function to add a product to an order in the database
     OrderStore.prototype.addProduct = function (quantity, orderId, productId) {
         return __awaiter(this, void 0, Promise, function () {
             var getOrderSql, insertProductSql, conn, orderResult, order, result, addedProduct, err_5;
@@ -175,6 +180,7 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
+    // Function to get all products for a specific order from the database
     OrderStore.prototype.getOrderProducts = function (orderId) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, err_6;
@@ -199,6 +205,7 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
+    // Function to get all active orders for a specific user from the database
     OrderStore.prototype.getActiveOrdersByUser = function (userId) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, err_7;
