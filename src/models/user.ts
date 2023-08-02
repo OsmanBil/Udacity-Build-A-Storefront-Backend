@@ -10,11 +10,12 @@ export type User = {
 }
 
 
-const pepper = 'your-pepper-value';
-const saltRounds: any = 10;
+const pepper = 'your-pepper-value'; // A pepper value used to add extra randomness to password hashing
+const saltRounds: any = 10; // The number of salt rounds used for password hashing
 
 
 export class UserStore {
+    // Function to get all users from the database
     async index(): Promise<User[]> {
         try {
             const conn = await Client.connect();
@@ -27,7 +28,7 @@ export class UserStore {
         }
     }
 
-
+    // Function to get a specific user by ID from the database
     async show(id: string): Promise<User> {
         try {
             const sql = 'SELECT * FROM users WHERE id=($1)'
@@ -40,7 +41,7 @@ export class UserStore {
         }
     }
 
-
+    // Function to create a new user in the database
     async create(u: User): Promise<User> {
         try {
             const conn = await Client.connect()
@@ -55,6 +56,7 @@ export class UserStore {
         }
     }
 
+    // Function to authenticate a user based on the provided username and password
     async authenticate(username: string, password: string): Promise<User | null> {
         const conn = await Client.connect()
         const sql = 'SELECT password FROM users WHERE username=($1)'
@@ -70,6 +72,7 @@ export class UserStore {
         return null
     }
 
+    // Function to update a user's information in the database
     async update(id: number, updatedUser: Partial<User>): Promise<User | null> {
         try {
             const conn = await Client.connect();
@@ -90,7 +93,8 @@ export class UserStore {
         }
     }
 
-    private async findById(id: number): Promise<User | null> {
+    // Function to find a user by ID in the database
+    async findById(id: number): Promise<User | null> {
         try {
             const conn = await Client.connect();
             const sql = 'SELECT * FROM users WHERE id = $1';

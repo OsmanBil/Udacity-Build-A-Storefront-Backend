@@ -50,11 +50,12 @@ exports.__esModule = true;
 exports.UserStore = void 0;
 var database_1 = require("../database");
 var bcrypt_1 = require("bcrypt");
-var pepper = 'your-pepper-value';
-var saltRounds = 10;
+var pepper = 'your-pepper-value'; // A pepper value used to add extra randomness to password hashing
+var saltRounds = 10; // The number of salt rounds used for password hashing
 var UserStore = /** @class */ (function () {
     function UserStore() {
     }
+    // Function to get all users from the database
     UserStore.prototype.index = function () {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, err_1;
@@ -79,6 +80,7 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
+    // Function to get a specific user by ID from the database
     UserStore.prototype.show = function (id) {
         return __awaiter(this, void 0, Promise, function () {
             var sql, conn, result, err_2;
@@ -103,6 +105,7 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
+    // Function to create a new user in the database
     UserStore.prototype.create = function (u) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, hash, result, user, err_3;
@@ -129,6 +132,7 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
+    // Function to authenticate a user based on the provided username and password
     UserStore.prototype.authenticate = function (username, password) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, user;
@@ -152,6 +156,7 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
+    // Function to update a user's information in the database
     UserStore.prototype.update = function (id, updatedUser) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, existingUser, mergedUser, sql, hash, result, user, err_4;
@@ -185,6 +190,7 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
+    // Function to find a user by ID in the database
     UserStore.prototype.findById = function (id) {
         return __awaiter(this, void 0, Promise, function () {
             var conn, sql, result, err_5;
