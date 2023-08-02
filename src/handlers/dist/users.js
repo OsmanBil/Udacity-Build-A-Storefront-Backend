@@ -39,8 +39,8 @@ exports.__esModule = true;
 exports.verifyAuthToken = void 0;
 var user_1 = require("../models/user");
 var jsonwebtoken_1 = require("jsonwebtoken");
-var store = new user_1.UserStore();
-// It calls the UserStore instance's index method to retrieve all the users and sends them back as a JSON response.
+var store = new user_1.UserStore(); // Create a new instance of the UserStore class
+// Route handler to get all users from the database and send them as a JSON response
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var authorizationHeader, token, users;
     return __generator(this, function (_a) {
@@ -64,6 +64,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// Route handler to get a specific user by ID from the database and send it as a JSON response
 var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, user;
     return __generator(this, function (_a) {
@@ -78,7 +79,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); };
-// The function creates a new User object from the received data, then calls the UserStore instance's create method to store the user in the database, and sends back the newly created user as a JSON response. If an error occurs during the build process, an error message is returned as a JSON response with a 400 status code.
+// Route handler to create a new user in the database and send back the newly created user as a JSON response
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var user, newUser, token, err_1;
     return __generator(this, function (_a) {
@@ -108,43 +109,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-exports.verifyAuthToken = function (req, res, next) {
-    var authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) {
-        res.status(401);
-        res.json('Access denied, no token provided');
-        return;
-    }
-    try {
-        var token = authorizationHeader.split(' ')[1];
-        jsonwebtoken_1["default"].verify(token, process.env.TOKEN_SECRET);
-        next();
-    }
-    catch (err) {
-        res.status(401);
-        res.json('Access denied, invalid token');
-        return;
-    }
-};
-var verifyDecodedUser = function (req, res, next) {
-    var authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) {
-        res.status(401).json({ message: 'Access denied, no token provided.' });
-        return;
-    }
-    var decoded = jsonwebtoken_1["default"].decode(authorizationHeader.split(' ')[1]);
-    if (!decoded || typeof decoded === 'string') {
-        res.status(401).json({ message: 'Invalid JWT payload.' });
-        return;
-    }
-    var userId = parseInt(req.params.id);
-    if (decoded.user && decoded.user.id === userId) {
-        next();
-    }
-    else {
-        res.status(401).json({ message: 'Access denied, invalid token' });
-    }
-};
+// Route handler to update a user's information in the database and send back the updated user as a JSON response
 var update = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, userUpdate, updatedUser, err_2;
     return __generator(this, function (_a) {
@@ -174,11 +139,50 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-// The code exports the books_routes function as a default export so that it can be imported into other files and used in an Express application to define the routes for the books API.
+// Middleware function to verify the authenticity of the JWT token
+exports.verifyAuthToken = function (req, res, next) {
+    var authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+        res.status(401);
+        res.json('Access denied, no token provided');
+        return;
+    }
+    try {
+        var token = authorizationHeader.split(' ')[1];
+        jsonwebtoken_1["default"].verify(token, process.env.TOKEN_SECRET);
+        next();
+    }
+    catch (err) {
+        res.status(401);
+        res.json('Access denied, invalid token');
+        return;
+    }
+};
+// Middleware function to verify if the decoded user from the JWT token matches the requested user ID
+var verifyDecodedUser = function (req, res, next) {
+    var authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+        res.status(401).json({ message: 'Access denied, no token provided.' });
+        return;
+    }
+    var decoded = jsonwebtoken_1["default"].decode(authorizationHeader.split(' ')[1]);
+    if (!decoded || typeof decoded === 'string') {
+        res.status(401).json({ message: 'Invalid JWT payload.' });
+        return;
+    }
+    var userId = parseInt(req.params.id);
+    if (decoded.user && decoded.user.id === userId) {
+        next();
+    }
+    else {
+        res.status(401).json({ message: 'Access denied, invalid token' });
+    }
+};
+// Export the users_routes function as a default export so that it can be imported into other files and used to define the routes for the users API
 var users_routes = function (app) {
-    app.get('/users', exports.verifyAuthToken, index);
-    app.get('/users/:id', exports.verifyAuthToken, show);
-    app.post('/users', create);
-    app.put('/users/:id', exports.verifyAuthToken, verifyDecodedUser, update);
+    app.get('/users', exports.verifyAuthToken, index); // Define the GET route for getting all users
+    app.get('/users/:id', exports.verifyAuthToken, show); // Define the GET route for getting a specific user by ID
+    app.post('/users', create); // Define the POST route for creating a new user
+    app.put('/users/:id', exports.verifyAuthToken, verifyDecodedUser, update); // Define the PUT route for updating a user by ID
 };
 exports["default"] = users_routes;
