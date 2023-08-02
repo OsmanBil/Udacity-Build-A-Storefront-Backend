@@ -149,11 +149,62 @@ var getOrderProducts = function (req, res) { return __awaiter(void 0, void 0, vo
         }
     });
 }); };
+var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, activeOrders, err_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userId = req.params.id;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.getActiveOrdersByUser(userId)];
+            case 2:
+                activeOrders = _a.sent();
+                res.json(activeOrders);
+                return [3 /*break*/, 4];
+            case 3:
+                err_4 = _a.sent();
+                res.status(400);
+                res.json(err_4);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var update = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, orderUpdate, updatedOrder, err_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                orderId = parseInt(req.params.id);
+                orderUpdate = {
+                    status: req.body.status
+                };
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.update(orderId, orderUpdate)];
+            case 2:
+                updatedOrder = _a.sent();
+                res.json(updatedOrder);
+                return [3 /*break*/, 4];
+            case 3:
+                err_5 = _a.sent();
+                res.status(400);
+                res.json(err_5);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 var order_routes = function (app) {
     app.get('/orders', index);
     app.get('/orders/:id', users_1.verifyAuthToken, show);
+    app.get('/orders/users/:id', users_1.verifyAuthToken, getActiveOrdersByUser);
     app.post('/orders', users_1.verifyAuthToken, create);
     app.get('/orders/:id/products', users_1.verifyAuthToken, getOrderProducts);
+    app.put('/orders/:id', users_1.verifyAuthToken, update);
     // add product
     app.post('/orders/:id/products', addProduct);
 };

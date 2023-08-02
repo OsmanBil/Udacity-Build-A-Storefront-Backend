@@ -11,7 +11,6 @@ const index = async (_req: Request, res: Response) => {
     res.json(orders)
 }
 
-
 const show = async (_req: Request, res: Response) => {
     console.log(_req.params)
     const order = await store.show(_req.params.id)
@@ -42,8 +41,6 @@ const create = async (req: Request, res: Response) => {
     }
 };
 
-
-
 const addProduct = async (_req: Request, res: Response) => {
     const orderId: any = _req.params.id
     const productId: string = _req.body.productId
@@ -70,11 +67,39 @@ const getOrderProducts = async (req: Request, res: Response) => {
 
 };
 
+const getActiveOrdersByUser = async (req: Request, res: Response) => {
+    const userId = req.params.id; // oder extrahieren Sie es aus dem Token, wie Sie es bei der `create` Funktion gemacht haben
+    try {
+        const activeOrders = await store.getActiveOrdersByUser(userId);
+        res.json(activeOrders);
+    } catch (err) {
+        res.status(400);
+        res.json(err);
+    }
+};
+
+const update = async (req: Request, res: Response) => {
+    const orderId = parseInt(req.params.id);
+    const orderUpdate: Partial<Order> = {
+        status: req.body.status
+    };
+
+    try {
+        const updatedOrder = await store.update(orderId, orderUpdate);
+        res.json(updatedOrder);
+    } catch (err) {
+        res.status(400);
+        res.json(err);
+    }
+};
+
 const order_routes = (app: express.Application) => {
     app.get('/orders', index)
     app.get('/orders/:id', authMiddleware, show)
+    app.get('/orders/users/:id', authMiddleware, getActiveOrdersByUser);
     app.post('/orders', authMiddleware, create)
     app.get('/orders/:id/products', authMiddleware, getOrderProducts);
+    app.put('/orders/:id', authMiddleware, update);
     // add product
     app.post('/orders/:id/products', addProduct)
 }

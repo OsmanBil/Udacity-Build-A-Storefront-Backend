@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { User, UserStore } from '../models/user'
 import jwt from 'jsonwebtoken'
 
@@ -34,7 +34,7 @@ const create = async (req: Request, res: Response) => {
         password: req.body.password,
         username: req.body.username,
     }
-
+    
     try {
         const newUser = await store.create(user)
         var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as string);
@@ -46,8 +46,14 @@ const create = async (req: Request, res: Response) => {
 }
 
 export const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
+    const authorizationHeader = req.headers.authorization
+    if (!authorizationHeader) {
+        res.status(401)
+        res.json('Access denied, no token provided')
+        return
+    }
+
     try {
-        const authorizationHeader: any = req.headers.authorization
         const token = authorizationHeader.split(' ')[1]
         jwt.verify(token, process.env.TOKEN_SECRET as string)
         next();
@@ -59,23 +65,29 @@ export const verifyAuthToken = (req: Request, res: Response, next: () => void) =
 }
 
 
-const authenticate = async (req: Request, res: Response) => {
-    const user: User = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: req.body.password,
-        username: req.body.username,
+const verifyDecodedUser = (req: Request, res: Response, next: NextFunction) => {
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+        res.status(401).json({ message: 'Access denied, no token provided.' });
+        return;
     }
-    try {
-        const u = await store.authenticate(user.username, user.password)
-        var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as string);
-        res.json(token)
+
+    const decoded = jwt.decode(authorizationHeader.split(' ')[1]);
+
+    if (!decoded || typeof decoded === 'string') {
+        res.status(401).json({ message: 'Invalid JWT payload.' });
+        return;
     }
-    catch (error) {
-        res.status(401)
-        res.json({ error })
+
+    const userId = parseInt(req.params.id);
+
+    if (decoded.user && decoded.user.id === userId) {
+        next();
+    } else {
+        res.status(401).json({ message: 'Access denied, invalid token' });
     }
-}
+};
+
 
 
 const update = async (req: Request, res: Response) => {
@@ -88,33 +100,22 @@ const update = async (req: Request, res: Response) => {
     };
 
     try {
-        const authorizationHeader: any = req.headers.authorization;
-        const token = authorizationHeader.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET as string);
-
-        if (typeof decoded === 'string') {
-            throw new Error('Invalid JWT payload.');
-        }
-        // Verify that the decoded user object exists and the ID matches
-        if (decoded.user && decoded.user.id === userId) {
-            const updatedUser = await store.update(userId, userUpdate);
-            res.json(updatedUser);
-        } else {
-            res.status(401);
-            res.json({ error: 'Unauthorized: You can only update your own user.' });
-        }
+        
+        const updatedUser = await store.update(userId, userUpdate);
+        res.json(updatedUser);
     } catch (err) {
         res.status(400);
         res.json(err);
     }
 };
 
+
 // The code exports the books_routes function as a default export so that it can be imported into other files and used in an Express application to define the routes for the books API.
 const users_routes = (app: express.Application) => {
     app.get('/users', verifyAuthToken, index)
     app.get('/users/:id', verifyAuthToken, show)
     app.post('/users', create)
-    app.put('/users/:id', verifyAuthToken, update)
+    app.put('/users/:id', verifyAuthToken, verifyDecodedUser, update);
 }
 
 export default users_routes

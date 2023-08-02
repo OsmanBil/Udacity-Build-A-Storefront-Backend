@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express'
 import { Product, ProductStore } from '../models/product'
-import jwt from 'jsonwebtoken'
 import { verifyAuthToken as authMiddleware } from './users';
 
 const store = new ProductStore()
