@@ -87,7 +87,7 @@ export class OrderStore {
     }
 
     // Function to get all products for a specific order from the database
-    async getOrderProducts(orderId: number): Promise<any[]> {
+    async getOrderProducts(orderId: number): Promise<Order[]> {
         try {
             const conn = await Client.connect();
             const sql = 'SELECT * FROM order_products WHERE order_id = $1';
