@@ -14,7 +14,6 @@ const index = async (_req: Request, res: Response) => {
 
 // Route handler to get a specific order by ID from the database and send it as a JSON response
 const show = async (_req: Request, res: Response) => {
-    console.log(_req.params)
     const order = await store.show(_req.params.id)
     res.json(order)
 }
@@ -108,7 +107,7 @@ const order_routes = (app: express.Application) => {
     app.post('/orders', authMiddleware, create); // Define the POST route for creating a new order with authentication middleware
     app.get('/orders/:id/products', authMiddleware, getOrderProducts); // Define the GET route for getting all products of an order with authentication middleware
     app.put('/orders/:id', authMiddleware, update); // Define the PUT route for updating an order by ID with authentication middleware
-    app.post('/orders/:id/products', addProduct); // Define the POST route for adding a product to an order
+    app.post('/orders/:id/products',authMiddleware, addProduct); // Define the POST route for adding a product to an order
 }
 
 export default order_routes

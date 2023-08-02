@@ -58,9 +58,7 @@ var show = function (_req, res) { return __awaiter(void 0, void 0, void 0, funct
     var order;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                console.log(_req.params);
-                return [4 /*yield*/, store.show(_req.params.id)];
+            case 0: return [4 /*yield*/, store.show(_req.params.id)];
             case 1:
                 order = _a.sent();
                 res.json(order);
@@ -213,6 +211,6 @@ var order_routes = function (app) {
     app.post('/orders', users_1.verifyAuthToken, create); // Define the POST route for creating a new order with authentication middleware
     app.get('/orders/:id/products', users_1.verifyAuthToken, getOrderProducts); // Define the GET route for getting all products of an order with authentication middleware
     app.put('/orders/:id', users_1.verifyAuthToken, update); // Define the PUT route for updating an order by ID with authentication middleware
-    app.post('/orders/:id/products', addProduct); // Define the POST route for adding a product to an order
+    app.post('/orders/:id/products', users_1.verifyAuthToken, addProduct); // Define the POST route for adding a product to an order
 };
 exports["default"] = order_routes;
