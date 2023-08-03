@@ -35,6 +35,7 @@ Dashboard Routes
 # Database Schema
 
 Table: order_products
+
     CREATE TABLE order_products (
         id SERIAL PRIMARY KEY,
         quantity INTEGER NOT NULL,
