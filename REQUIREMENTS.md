@@ -66,19 +66,121 @@ Delete a user by ID with authentication middleware.
 
 Orders Routes
 
-    GET /orders: Retrieve all orders from the database.
-    GET /orders/:id: Retrieve a specific order by ID with authentication middleware.
-    POST /orders: Create a new order with authentication middleware.
-    PUT /orders/:id: Update an order by ID with authentication middleware.
-    POST /orders/:id/products: Add a product to an order with authentication middleware.
+Retrieve all orders from the database.
+
+    Method: GET
+    Endpoint: /orders
+
+    Example Request:
+    GET http://localhost:3000/orders
+    Authorization: Bearer <access_token>
+
+Retrieve a specific order by ID with authentication middleware.
+
+    Method: GET
+    Endpoint: /orders/:id
+
+    Example Request:
+    GET http://localhost:3000/orders/1
+    Authorization: Bearer <access_token>
+
+Create a new order with authentication middleware.
+
+    Method: POST
+    Endpoint: /orders
+
+    Example Request:
+    POST http://localhost:3000/orders
+    Authorization: Bearer <access_token>
+
+    {
+        "status": "active"
+    }
+
+Update an order by ID with authentication middleware.
+
+    Method: PUT
+    Endpoint: /orders/:id
+
+    Example Request:
+    PUT http://localhost:3000/orders/1
+    Authorization: Bearer <access_token>
+
+    {
+        "status": "completed"
+    }
+
+Add a product to an order with authentication middleware.
+
+    Method: POST
+    Endpoint: /orders/:id/products
+
+    Example Request:
+    POST http://localhost:3000/orders/1/products
+    Authorization: Bearer <access_token>
+
+    {
+        "productId": 123,
+        "quantity": 2
+    }
 
 Products Routes
 
-    GET /products: Retrieve all products from the database.
-    GET /products/:id: Retrieve a specific product by ID.
-    POST /products: Create a new product with authentication middleware.
-    PUT /products/:id: Update a product by ID with authentication middleware.
-    DELETE /products/:id: Delete a product by ID with authentication middleware.
+Retrieve all products from the database.
+
+    Method: GET
+    Endpoint: /products  
+
+    Example Request:
+    GET http://localhost:3000/products
+
+Retrieve a specific product by ID.
+
+    Method: GET
+    Endpoint: /products/:id
+
+    Example Request:
+    GET http://localhost:3000/products/123
+
+Create a new product with authentication middleware.
+
+    Method: POST
+    Endpoint: /products
+
+    Example Request:
+    POST http://localhost:3000/products
+    Authorization: Bearer <access_token>
+
+    {
+        "name": "Notebook",
+        "price": 2000.89,
+        "category": "Electronics"
+    }
+
+Update a product by ID with authentication middleware.
+
+    Method: PUT
+    Endpoint: /products/:id
+
+    Example Request:
+    PUT http://localhost:3000/products/123
+    Authorization: Bearer <access_token>
+
+    {
+        "name": "Updated Product A",
+        "price": 24.99,
+        "category": "Electronics"
+    }
+
+Delete a product by ID with authentication middleware.
+
+    Method: DELETE
+    Endpoint: /products/:id
+
+    Example Request:
+    DELETE http://localhost:3000/products/123
+    Authorization: Bearer <access_token>
+
 
 Dashboard Routes
 
