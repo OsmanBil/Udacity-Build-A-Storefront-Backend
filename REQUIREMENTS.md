@@ -30,15 +30,17 @@ Products Routes
 Dashboard Routes
 
 Retrieve all active orders of a user with authentication middleware.
+    
     GET /orders/users/:id
     Method: GET
     Endpoint: /orders/users/:id
-    
+
     Example Request:
     GET http://localhost:3000/orders/users/12345
     Authorization: Bearer <access_token>
 
 Retrieve all products of an order with authentication middleware.
+    
     GET /orders/:id/products: 
 
 
