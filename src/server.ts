@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import users_routes from './handlers/users';
 import products_routes from './handlers/products';
 import order_routes from './handlers/orders';
+import dashboard_routes from './handlers/dashboard';
 
 const app: express.Application = express(); // Create an Express application (App)
 const address: string = "0.0.0.0:3000" // The address and port on which the server will run
@@ -18,6 +19,7 @@ app.get('/', function (req: Request, res: Response) {
 users_routes(app);
 products_routes(app);
 order_routes(app);
+dashboard_routes(app);
 
 // Start the server and make it listen for incoming connections on port 3000
 app.listen(3000, function () {

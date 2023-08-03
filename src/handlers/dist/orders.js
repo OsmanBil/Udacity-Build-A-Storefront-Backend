@@ -128,57 +128,9 @@ var addProduct = function (_req, res) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-// Route handler to get all products of an order from the database and send them as a JSON response
-var getOrderProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderId, orderProducts, err_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                orderId = parseInt(req.params.id);
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.getOrderProducts(orderId)];
-            case 2:
-                orderProducts = _a.sent();
-                res.json(orderProducts);
-                return [3 /*break*/, 4];
-            case 3:
-                err_3 = _a.sent();
-                res.status(400);
-                res.json(err_3);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-// Route handler to get all active orders of a user from the database and send them as a JSON response
-var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, activeOrders, err_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                userId = req.params.id;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.getActiveOrdersByUser(userId)];
-            case 2:
-                activeOrders = _a.sent();
-                res.json(activeOrders);
-                return [3 /*break*/, 4];
-            case 3:
-                err_4 = _a.sent();
-                res.status(400);
-                res.json(err_4);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
 // Route handler to update an order's information in the database and send back the updated order as a JSON response
 var update = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderId, orderUpdate, updatedOrder, err_5;
+    var orderId, orderUpdate, updatedOrder, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -195,9 +147,9 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 res.json(updatedOrder);
                 return [3 /*break*/, 4];
             case 3:
-                err_5 = _a.sent();
+                err_3 = _a.sent();
                 res.status(400);
-                res.json(err_5);
+                res.json(err_3);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -207,9 +159,7 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
 var order_routes = function (app) {
     app.get('/orders', index); // Define the GET route for getting all orders
     app.get('/orders/:id', auth_1.verifyAuthToken, show); // Define the GET route for getting a specific order by ID with authentication middleware
-    app.get('/orders/users/:id', auth_1.verifyAuthToken, getActiveOrdersByUser); // Define the GET route for getting all active orders of a user with authentication middleware
     app.post('/orders', auth_1.verifyAuthToken, create); // Define the POST route for creating a new order with authentication middleware
-    app.get('/orders/:id/products', auth_1.verifyAuthToken, getOrderProducts); // Define the GET route for getting all products of an order with authentication middleware
     app.put('/orders/:id', auth_1.verifyAuthToken, update); // Define the PUT route for updating an order by ID with authentication middleware
     app.post('/orders/:id/products', auth_1.verifyAuthToken, addProduct); // Define the POST route for adding a product to an order
 };

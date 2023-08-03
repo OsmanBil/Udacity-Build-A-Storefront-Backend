@@ -180,56 +180,6 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
-    // Function to get all products for a specific order from the database
-    OrderStore.prototype.getOrderProducts = function (orderId) {
-        return __awaiter(this, void 0, Promise, function () {
-            var conn, sql, result, err_6;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, database_1["default"].connect()];
-                    case 1:
-                        conn = _a.sent();
-                        sql = 'SELECT * FROM order_products WHERE order_id = $1';
-                        return [4 /*yield*/, conn.query(sql, [orderId])];
-                    case 2:
-                        result = _a.sent();
-                        conn.release();
-                        return [2 /*return*/, result.rows];
-                    case 3:
-                        err_6 = _a.sent();
-                        throw new Error("Could not get order products for order " + orderId + ": " + err_6);
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    // Function to get all active orders for a specific user from the database
-    OrderStore.prototype.getActiveOrdersByUser = function (userId) {
-        return __awaiter(this, void 0, Promise, function () {
-            var conn, sql, result, err_7;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, database_1["default"].connect()];
-                    case 1:
-                        conn = _a.sent();
-                        sql = 'SELECT * FROM orders WHERE user_id=$1 AND status=\'active\'';
-                        return [4 /*yield*/, conn.query(sql, [userId])];
-                    case 2:
-                        result = _a.sent();
-                        conn.release();
-                        return [2 /*return*/, result.rows];
-                    case 3:
-                        err_7 = _a.sent();
-                        throw new Error("Could not get active orders for user " + userId + ": " + err_7);
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
     return OrderStore;
 }());
 exports.OrderStore = OrderStore;
