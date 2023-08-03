@@ -35,25 +35,31 @@ Dashboard Routes
 # Database Schema
 
 Table: order_products
-Column	Type	Constraints
-id	SERIAL	PRIMARY KEY
-quantity	INTEGER	NOT NULL
-order_id	INTEGER	NOT NULL
-product_id	INTEGER	NOT NULL
+Column	    Type	        Constraints
+id	        SERIAL	        PRIMARY KEY
+quantity	INTEGER	        NOT NULL
+order_id	INTEGER	        NOT NULL
+product_id	INTEGER	        NOT NULL
+
+
 Table: orders
-Column	Type	Constraints
-id	SERIAL	PRIMARY KEY
-user_id	INTEGER	NOT NULL
-status	VARCHAR(50)	NOT NULL
+Column	    Type	        Constraints
+id	        SERIAL	        PRIMARY KEY
+user_id	    INTEGER	        NOT NULL
+status	    VARCHAR(50)	    NOT NULL
+
+
 Table: products
-Column	Type	Constraints
-id	SERIAL	PRIMARY KEY
-name	VARCHAR(255)	NOT NULL
-price	NUMERIC(10,2)	NOT NULL
+Column	    Type	        Constraints
+id	        ERIAL	        PRIMARY KEY
+name	    VARCHAR(255)	NOT NULL
+price	    NUMERIC(10,2)	NOT NULL
 category	VARCHAR(100)	NOT NULL
+
+
 Table: users
-Column	Type	Constraints
-id	SERIAL	PRIMARY KEY
+Column	    Type	        Constraints
+id	        SERIAL	        PRIMARY KEY
 firstName	VARCHAR(255)	NOT NULL
 lastName	VARCHAR(255)	NOT NULL
 password	VARCHAR(255)	NOT NULL
