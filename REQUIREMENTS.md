@@ -167,8 +167,8 @@ Update a product by ID with authentication middleware.
     Authorization: Bearer <access_token>
 
     {
-        "name": "Updated Product A",
-        "price": 24.99,
+        "name": "Notebook",
+        "price": 1999.99,
         "category": "Electronics"
     }
 

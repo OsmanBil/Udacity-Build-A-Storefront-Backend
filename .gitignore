@@ -2,3 +2,4 @@
 /.env
 /dist
 /database.json
+/src/handlers/dist

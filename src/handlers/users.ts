@@ -10,15 +10,6 @@ const store = new UserStore(); // Create a new instance of the UserStore class
 
 // Route handler to get all users from the database and send them as a JSON response
 const index = async (_req: Request, res: Response) => {
-  try {
-    const authorizationHeader: any = _req.headers.authorization;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET as string);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
   const users = await store.index();
   res.json(users);
 };
@@ -41,7 +32,10 @@ const create = async (req: Request, res: Response) => {
 
   try {
     const newUser = await store.create(user);
-    var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as string);
+    const token = jwt.sign(
+      { user: newUser },
+      process.env.TOKEN_SECRET as string,
+    );
     res.json(token);
   } catch (err) {
     res.status(400);
@@ -70,8 +64,9 @@ const update = async (req: Request, res: Response) => {
 
 // Route handler to delete a user from the database by ID and send back the deleted user as a JSON response
 const destroy = async (req: Request, res: Response) => {
+  const userId = req.params.id;
   try {
-    const deleted = await store.delete(req.body.id);
+    const deleted = await store.delete(userId);
     res.json(deleted);
   } catch (err) {
     res.status(400);
