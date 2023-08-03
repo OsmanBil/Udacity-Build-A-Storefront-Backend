@@ -6,6 +6,7 @@ Udacity Storefront Backend Project Requirements
 Users Routes
 
 Retrieve all users from the database.
+
     Method: GET
     Endpoint: /users
 
@@ -14,6 +15,7 @@ Retrieve all users from the database.
     Authorization: Bearer <access_token>
 
 Retrieve a specific user by ID.  
+
     Method: GET
     Endpoint: /users/:id
 
@@ -22,6 +24,7 @@ Retrieve a specific user by ID.
     Authorization: Bearer <access_token>
 
 Create a new user with authentication middleware.
+
     Method: POST
     Endpoint: /users
     
@@ -37,6 +40,7 @@ Create a new user with authentication middleware.
     }
 
 Update a user by ID with authentication middleware.
+
     Method: PUT
     Endpoint: /users/:id
 
@@ -52,6 +56,7 @@ Update a user by ID with authentication middleware.
     }
 
 Delete a user by ID with authentication middleware.
+
     Method: DELETE
     Endpoint: /users/:id
 
