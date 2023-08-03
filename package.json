@@ -8,7 +8,8 @@
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "test": "set ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop --env test",
     "tsc": "tsc",
-    "migrate": "set ENV=test && db-migrate --env test up && db-migrate up"
+    "migrate": "set ENV=test && db-migrate --env test up && db-migrate up",
+    "build": "npx tsc "
   },
   "author": "Udacity",
   "license": "ISC",
