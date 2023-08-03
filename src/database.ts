@@ -8,7 +8,7 @@ const {
   POSTGRES_DB,
   POSTGRES_USER,
   POSTGRES_PASSWORD,
-  POSTGRES_TEST_DB,
+  POSTGRES_DB_TEST,
   ENV,
 } = process.env
 let client: any;
@@ -20,7 +20,7 @@ console.log(`Connected to ${POSTGRES_DB} database.`);
 if (ENV === 'test') {
   client = new Pool({
     host: POSTGRES_HOST,
-    database: POSTGRES_TEST_DB,
+    database: POSTGRES_DB_TEST,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
   })
