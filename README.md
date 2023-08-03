@@ -10,7 +10,7 @@ npm install
 
 # Database Setup and Connection
 
-Before running the backend, you need to set up and connect to the database. Make sure you have a compatible database installed - PostgreSQL
+Before running the backend, you need to set up and connect to the database. Make sure you have a compatible database installed - PostgreSQL.
 
     1. Create a new database for this project.
     2. Set the necessary environment variables to connect to the database. Use the following environment variables:
@@ -25,12 +25,51 @@ Before running the backend, you need to set up and connect to the database. Make
         SALT_ROUNDS=10
         TOKEN_SECRET=your_secret_token
 
-    Replace the datas with your actual database connection details
-    
-        
+    Replace the datas with your actual database connection details.
+
+# Backend and Database Ports
+
+The backend server and database may run on different ports. By default, the backend server runs on port 3000, and the database may use its default port 5432 for PostgreSQL.
+
+# Routes
+
+Users Routes
+
+    GET /users: Retrieve all users from the database.
+    GET /users/:id: Retrieve a specific user by ID.
+    POST /users: Create a new user with authentication middleware.
+    PUT /users/:id: Update a user by ID with authentication middleware.
+    DELETE /users/:id: Delete a user by ID with authentication middleware.
+
+Orders Routes
+
+    GET /orders: Retrieve all orders from the database.
+    GET /orders/:id: Retrieve a specific order by ID with authentication middleware.
+    POST /orders: Create a new order with authentication middleware.
+    PUT /orders/:id: Update an order by ID with authentication middleware.
+    POST /orders/:id/products: Add a product to an order with authentication middleware.
+
+Products Routes
+
+    GET /products: Retrieve all products from the database.
+    GET /products/:id: Retrieve a specific product by ID.
+    POST /products: Create a new product with authentication middleware.
+    PUT /products/:id: Update a product by ID with authentication middleware.
+    DELETE /products/:id: Delete a product by ID with authentication middleware.
+
+Dashboard Routes
+
+    GET /orders/users/:id: Retrieve all active orders of a user with authentication middleware.
+    GET /orders/:id/products: Retrieve all products of an order with authentication middleware.
+
 # Usage
 
-Its a Udacity learn Project
+This project serves as the backend for the Udacity Storefront application. It provides various API endpoints to handle user authentication, product management, order processing, and more.
+
+To start the backend server, use the following command:
+
+ npm start
+
 
 
 # Tests
