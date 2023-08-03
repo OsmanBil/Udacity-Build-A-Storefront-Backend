@@ -26,6 +26,8 @@ Before running the backend, you need to set up and connect to the database. Make
         TOKEN_SECRET=your_secret_token
 
     Replace the datas with your actual database connection details.
+    3. Create the tables with:
+        db-migrate up
 
 # Backend and Database Ports
 
@@ -69,8 +71,6 @@ This project serves as the backend for the Udacity Storefront application. It pr
 To start the backend server, use the following command:
 
  npm start
-
-
 
 # Tests
 This project includes automated tests to ensure the proper functioning of the endpoints. The tests are designed to verify specific behaviors and response codes.

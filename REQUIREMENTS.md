@@ -1,42 +1,60 @@
-# API Requirements
-The company stakeholders want to create an online storefront to showcase their great product ideas. Users need to be able to browse an index of all products, see the specifics of a single product, and add products to an order that they can view in a cart page. You have been tasked with building the API that will support this application, and your coworker is building the frontend.
+# Udacity Storefront Backend Project Requirements
+Udacity Storefront Backend Project Requirements
 
-These are the notes from a meeting with the frontend developer that describe what endpoints the API needs to supply, as well as data shapes the frontend and backend have agreed meet the requirements of the application. 
+# RESTful Routes and HTTP Verbs
 
-## API Endpoints
-#### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+Users Routes
 
-#### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+    GET /users: Retrieve all users from the database.
+    GET /users/:id: Retrieve a specific user by ID.
+    POST /users: Create a new user with authentication middleware.
+    PUT /users/:id: Update a user by ID with authentication middleware.
+    DELETE /users/:id: Delete a user by ID with authentication middleware.
 
-#### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+Orders Routes
 
-## Data Shapes
-#### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+    GET /orders: Retrieve all orders from the database.
+    GET /orders/:id: Retrieve a specific order by ID with authentication middleware.
+    POST /orders: Create a new order with authentication middleware.
+    PUT /orders/:id: Update an order by ID with authentication middleware.
+    POST /orders/:id/products: Add a product to an order with authentication middleware.
 
-#### User
-- id
-- firstName
-- lastName
-- password
+Products Routes
 
-#### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+    GET /products: Retrieve all products from the database.
+    GET /products/:id: Retrieve a specific product by ID.
+    POST /products: Create a new product with authentication middleware.
+    PUT /products/:id: Update a product by ID with authentication middleware.
+    DELETE /products/:id: Delete a product by ID with authentication middleware.
 
+Dashboard Routes
+
+    GET /orders/users/:id: Retrieve all active orders of a user with authentication middleware.
+    GET /orders/:id/products: Retrieve all products of an order with authentication middleware.
+
+# Database Schema
+
+Table: order_products
+Column	Type	Constraints
+id	SERIAL	PRIMARY KEY
+quantity	INTEGER	NOT NULL
+order_id	INTEGER	NOT NULL
+product_id	INTEGER	NOT NULL
+Table: orders
+Column	Type	Constraints
+id	SERIAL	PRIMARY KEY
+user_id	INTEGER	NOT NULL
+status	VARCHAR(50)	NOT NULL
+Table: products
+Column	Type	Constraints
+id	SERIAL	PRIMARY KEY
+name	VARCHAR(255)	NOT NULL
+price	NUMERIC(10,2)	NOT NULL
+category	VARCHAR(100)	NOT NULL
+Table: users
+Column	Type	Constraints
+id	SERIAL	PRIMARY KEY
+firstName	VARCHAR(255)	NOT NULL
+lastName	VARCHAR(255)	NOT NULL
+password	VARCHAR(255)	NOT NULL
+username	VARCHAR(255)	NOT NULL
