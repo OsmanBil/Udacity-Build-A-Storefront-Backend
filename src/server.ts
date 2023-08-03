@@ -25,3 +25,5 @@ dashboard_routes(app);
 app.listen(3000, function () {
   console.log(`Starting app on: ${address}`);
 });
+
+export default app;
