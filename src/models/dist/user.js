@@ -99,7 +99,7 @@ var UserStore = /** @class */ (function () {
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_2 = _a.sent();
-                        throw new Error("Could not find product " + id + ": " + err_2);
+                        throw new Error("Could not find user " + id + ": " + err_2);
                     case 4: return [2 /*return*/];
                 }
             });
@@ -128,30 +128,6 @@ var UserStore = /** @class */ (function () {
                         err_3 = _a.sent();
                         throw new Error("unable create user (" + u.username + "): " + err_3);
                     case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    // Function to authenticate a user based on the provided username and password
-    UserStore.prototype.authenticate = function (username, password) {
-        return __awaiter(this, void 0, Promise, function () {
-            var conn, sql, result, user;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, database_1["default"].connect()];
-                    case 1:
-                        conn = _a.sent();
-                        sql = 'SELECT password FROM users WHERE username=($1)';
-                        return [4 /*yield*/, conn.query(sql, [username])];
-                    case 2:
-                        result = _a.sent();
-                        if (result.rows.length) {
-                            user = result.rows[0];
-                            if (bcrypt_1["default"].compareSync(password + pepper, user.password)) {
-                                return [2 /*return*/, user];
-                            }
-                        }
-                        return [2 /*return*/, null];
                 }
             });
         });
@@ -190,10 +166,61 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
+    // Function to delete a user from the database by ID
+    UserStore.prototype["delete"] = function (id) {
+        return __awaiter(this, void 0, Promise, function () {
+            var sql, conn, result, user, err_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        sql = 'DELETE FROM users WHERE id=($1)';
+                        return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        return [4 /*yield*/, conn
+                                .query(sql, [id])];
+                    case 2:
+                        result = _a.sent();
+                        user = result.rows[0];
+                        conn.release();
+                        return [2 /*return*/, user];
+                    case 3:
+                        err_5 = _a.sent();
+                        throw new Error("Could not delete user " + id + ": " + err_5);
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // Function to authenticate a user based on the provided username and password
+    UserStore.prototype.authenticate = function (username, password) {
+        return __awaiter(this, void 0, Promise, function () {
+            var conn, sql, result, user;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = 'SELECT password FROM users WHERE username=($1)';
+                        return [4 /*yield*/, conn.query(sql, [username])];
+                    case 2:
+                        result = _a.sent();
+                        if (result.rows.length) {
+                            user = result.rows[0];
+                            if (bcrypt_1["default"].compareSync(password + pepper, user.password)) {
+                                return [2 /*return*/, user];
+                            }
+                        }
+                        return [2 /*return*/, null];
+                }
+            });
+        });
+    };
     // Function to find a user by ID in the database
     UserStore.prototype.findById = function (id) {
         return __awaiter(this, void 0, Promise, function () {
-            var conn, sql, result, err_5;
+            var conn, sql, result, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -211,8 +238,8 @@ var UserStore = /** @class */ (function () {
                         }
                         return [2 /*return*/, null];
                     case 3:
-                        err_5 = _a.sent();
-                        throw new Error("Unable to find user (ID: " + id + "): " + err_5);
+                        err_6 = _a.sent();
+                        throw new Error("Unable to find user (ID: " + id + "): " + err_6);
                     case 4: return [2 /*return*/];
                 }
             });

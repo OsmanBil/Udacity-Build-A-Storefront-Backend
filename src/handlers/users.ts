@@ -1,6 +1,7 @@
-import express, { NextFunction, Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import { User, UserStore } from '../models/user'
 import jwt from 'jsonwebtoken'
+import { verifyAuthToken as authMiddleware, verifyDecodedUser as verifyDecodedUserMiddleware } from './auth';
 
 
 const store = new UserStore() // Create a new instance of the UserStore class
@@ -66,56 +67,24 @@ const update = async (req: Request, res: Response) => {
     }
 };
 
-// Middleware function to verify the authenticity of the JWT token
-export const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
-    const authorizationHeader = req.headers.authorization
-    if (!authorizationHeader) {
-        res.status(401)
-        res.json('Access denied, no token provided')
-        return
-    }
-
+// Route handler to delete a user from the database by ID and send back the deleted user as a JSON response
+const destroy = async (req: Request, res: Response) => {
     try {
-        const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.TOKEN_SECRET as string)
-        next();
+        const deleted = await store.delete(req.body.id)
+        res.json(deleted)
     } catch (err) {
-        res.status(401)
-        res.json('Access denied, invalid token')
-        return
-    }
-}
-
-// Middleware function to verify if the decoded user from the JWT token matches the requested user ID
-const verifyDecodedUser = (req: Request, res: Response, next: NextFunction) => {
-    const authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) {
-        res.status(401).json({ message: 'Access denied, no token provided.' });
-        return;
-    }
-
-    const decoded = jwt.decode(authorizationHeader.split(' ')[1]);
-
-    if (!decoded || typeof decoded === 'string') {
-        res.status(401).json({ message: 'Invalid JWT payload.' });
-        return;
-    }
-
-    const userId = parseInt(req.params.id);
-
-    if (decoded.user && decoded.user.id === userId) {
-        next();
-    } else {
-        res.status(401).json({ message: 'Access denied, invalid token' });
+        res.status(400)
+        res.json(err)
     }
 };
 
 // Export the users_routes function as a default export so that it can be imported into other files and used to define the routes for the users API
 const users_routes = (app: express.Application) => {
-    app.get('/users', verifyAuthToken, index); // Define the GET route for getting all users
-    app.get('/users/:id', verifyAuthToken, show); // Define the GET route for getting a specific user by ID
+    app.get('/users', authMiddleware, index); // Define the GET route for getting all users
+    app.get('/users/:id', authMiddleware, show); // Define the GET route for getting a specific user by ID
     app.post('/users', create); // Define the POST route for creating a new user
-    app.put('/users/:id', verifyAuthToken, verifyDecodedUser, update); // Define the PUT route for updating a user by ID
+    app.put('/users/:id', authMiddleware, verifyDecodedUserMiddleware, update); // Define the PUT route for updating a user by ID
+    app.delete('/users/:id', authMiddleware, destroy); // Define the DELETE route for deleting a user with authentication middleware
 }
 
 export default users_routes

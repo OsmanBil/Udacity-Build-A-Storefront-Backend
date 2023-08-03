@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -118,10 +129,43 @@ var ProductStore = /** @class */ (function () {
             });
         });
     };
+    // Function to update a product's information in the database
+    ProductStore.prototype.update = function (id, updatedProduct) {
+        return __awaiter(this, void 0, Promise, function () {
+            var conn, existingProduct, mergedProduct, sql, result, product, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        return [4 /*yield*/, this.findById(id)];
+                    case 2:
+                        existingProduct = _a.sent();
+                        if (!existingProduct) {
+                            throw new Error("Product with ID " + id + " not found.");
+                        }
+                        mergedProduct = __assign(__assign({}, existingProduct), updatedProduct);
+                        sql = 'UPDATE products SET name = $1, price = $2, category = $3 WHERE id = $4 RETURNING *';
+                        return [4 /*yield*/, conn.query(sql, [mergedProduct.name, mergedProduct.price, mergedProduct.category, id])];
+                    case 3:
+                        result = _a.sent();
+                        product = result.rows[0];
+                        conn.release();
+                        return [2 /*return*/, product];
+                    case 4:
+                        err_4 = _a.sent();
+                        throw new Error("Unable to update product (ID: " + id + "): " + err_4);
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
     // Function to delete a product from the database by ID
     ProductStore.prototype["delete"] = function (id) {
         return __awaiter(this, void 0, Promise, function () {
-            var sql, conn, result, product, err_4;
+            var sql, conn, result, product, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -138,8 +182,36 @@ var ProductStore = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, product];
                     case 3:
-                        err_4 = _a.sent();
-                        throw new Error("Could not delete product " + id + ": " + err_4);
+                        err_5 = _a.sent();
+                        throw new Error("Could not delete product " + id + ": " + err_5);
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // Function to find a product by ID in the database
+    ProductStore.prototype.findById = function (id) {
+        return __awaiter(this, void 0, Promise, function () {
+            var conn, sql, result, err_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = 'SELECT * FROM products WHERE id = $1';
+                        return [4 /*yield*/, conn.query(sql, [id])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        if (result.rows.length) {
+                            return [2 /*return*/, result.rows[0]];
+                        }
+                        return [2 /*return*/, null];
+                    case 3:
+                        err_6 = _a.sent();
+                        throw new Error("Unable to find product (ID: " + id + "): " + err_6);
                     case 4: return [2 /*return*/];
                 }
             });

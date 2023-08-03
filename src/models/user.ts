@@ -37,7 +37,7 @@ export class UserStore {
             conn.release()
             return result.rows[0]
         } catch (err) {
-            throw new Error(`Could not find product ${id}: ${err}`)
+            throw new Error(`Could not find user ${id}: ${err}`)
         }
     }
 
@@ -54,22 +54,6 @@ export class UserStore {
         } catch (err) {
             throw new Error(`unable create user (${u.username}): ${err}`)
         }
-    }
-
-    // Function to authenticate a user based on the provided username and password
-    async authenticate(username: string, password: string): Promise<User | null> {
-        const conn = await Client.connect()
-        const sql = 'SELECT password FROM users WHERE username=($1)'
-        const result = await conn.query(sql, [username])
-
-        if (result.rows.length) {
-            const user = result.rows[0]
-
-            if (bcrypt.compareSync(password + pepper, user.password)) {
-                return user
-            }
-        }
-        return null
     }
 
     // Function to update a user's information in the database
@@ -91,6 +75,38 @@ export class UserStore {
         } catch (err) {
             throw new Error(`Unable to update user (ID: ${id}): ${err}`);
         }
+    }
+
+    // Function to delete a user from the database by ID
+    async delete(id: string): Promise<User> {
+        try {
+            const sql = 'DELETE FROM users WHERE id=($1)'
+            const conn = await Client.connect()
+            const result = await conn
+                .query(sql, [id])
+            const user = result.rows[0]
+            conn.release()
+            return user
+
+        } catch (err) {
+            throw new Error(`Could not delete user ${id}: ${err}`)
+        }
+    }
+
+    // Function to authenticate a user based on the provided username and password
+    async authenticate(username: string, password: string): Promise<User | null> {
+        const conn = await Client.connect()
+        const sql = 'SELECT password FROM users WHERE username=($1)'
+        const result = await conn.query(sql, [username])
+
+        if (result.rows.length) {
+            const user = result.rows[0]
+
+            if (bcrypt.compareSync(password + pepper, user.password)) {
+                return user
+            }
+        }
+        return null
     }
 
     // Function to find a user by ID in the database

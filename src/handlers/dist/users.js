@@ -36,9 +36,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.verifyAuthToken = void 0;
 var user_1 = require("../models/user");
 var jsonwebtoken_1 = require("jsonwebtoken");
+var auth_1 = require("./auth");
 var store = new user_1.UserStore(); // Create a new instance of the UserStore class
 // Route handler to get all users from the database and send them as a JSON response
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -139,50 +139,33 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-// Middleware function to verify the authenticity of the JWT token
-exports.verifyAuthToken = function (req, res, next) {
-    var authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) {
-        res.status(401);
-        res.json('Access denied, no token provided');
-        return;
-    }
-    try {
-        var token = authorizationHeader.split(' ')[1];
-        jsonwebtoken_1["default"].verify(token, process.env.TOKEN_SECRET);
-        next();
-    }
-    catch (err) {
-        res.status(401);
-        res.json('Access denied, invalid token');
-        return;
-    }
-};
-// Middleware function to verify if the decoded user from the JWT token matches the requested user ID
-var verifyDecodedUser = function (req, res, next) {
-    var authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) {
-        res.status(401).json({ message: 'Access denied, no token provided.' });
-        return;
-    }
-    var decoded = jsonwebtoken_1["default"].decode(authorizationHeader.split(' ')[1]);
-    if (!decoded || typeof decoded === 'string') {
-        res.status(401).json({ message: 'Invalid JWT payload.' });
-        return;
-    }
-    var userId = parseInt(req.params.id);
-    if (decoded.user && decoded.user.id === userId) {
-        next();
-    }
-    else {
-        res.status(401).json({ message: 'Access denied, invalid token' });
-    }
-};
+// Route handler to delete a user from the database by ID and send back the deleted user as a JSON response
+var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var deleted, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store["delete"](req.body.id)];
+            case 1:
+                deleted = _a.sent();
+                res.json(deleted);
+                return [3 /*break*/, 3];
+            case 2:
+                err_3 = _a.sent();
+                res.status(400);
+                res.json(err_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 // Export the users_routes function as a default export so that it can be imported into other files and used to define the routes for the users API
 var users_routes = function (app) {
-    app.get('/users', exports.verifyAuthToken, index); // Define the GET route for getting all users
-    app.get('/users/:id', exports.verifyAuthToken, show); // Define the GET route for getting a specific user by ID
+    app.get('/users', auth_1.verifyAuthToken, index); // Define the GET route for getting all users
+    app.get('/users/:id', auth_1.verifyAuthToken, show); // Define the GET route for getting a specific user by ID
     app.post('/users', create); // Define the POST route for creating a new user
-    app.put('/users/:id', exports.verifyAuthToken, verifyDecodedUser, update); // Define the PUT route for updating a user by ID
+    app.put('/users/:id', auth_1.verifyAuthToken, auth_1.verifyDecodedUser, update); // Define the PUT route for updating a user by ID
+    app["delete"]('/users/:id', auth_1.verifyAuthToken, destroy); // Define the DELETE route for deleting a user with authentication middleware
 };
 exports["default"] = users_routes;

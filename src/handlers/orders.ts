@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { Order, OrderStore } from '../models/order'
 import jwt from 'jsonwebtoken'
-import { verifyAuthToken as authMiddleware } from './users';
+import { verifyAuthToken as authMiddleware } from './auth';
 
 
 const store = new OrderStore()

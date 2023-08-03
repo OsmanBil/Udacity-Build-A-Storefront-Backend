@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var order_1 = require("../models/order");
 var jsonwebtoken_1 = require("jsonwebtoken");
-var users_1 = require("./users");
+var auth_1 = require("./auth");
 var store = new order_1.OrderStore();
 // Route handler to get all orders from the database and send them as a JSON response
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -206,11 +206,11 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
 // Define the order routes using the given application instance
 var order_routes = function (app) {
     app.get('/orders', index); // Define the GET route for getting all orders
-    app.get('/orders/:id', users_1.verifyAuthToken, show); // Define the GET route for getting a specific order by ID with authentication middleware
-    app.get('/orders/users/:id', users_1.verifyAuthToken, getActiveOrdersByUser); // Define the GET route for getting all active orders of a user with authentication middleware
-    app.post('/orders', users_1.verifyAuthToken, create); // Define the POST route for creating a new order with authentication middleware
-    app.get('/orders/:id/products', users_1.verifyAuthToken, getOrderProducts); // Define the GET route for getting all products of an order with authentication middleware
-    app.put('/orders/:id', users_1.verifyAuthToken, update); // Define the PUT route for updating an order by ID with authentication middleware
-    app.post('/orders/:id/products', users_1.verifyAuthToken, addProduct); // Define the POST route for adding a product to an order
+    app.get('/orders/:id', auth_1.verifyAuthToken, show); // Define the GET route for getting a specific order by ID with authentication middleware
+    app.get('/orders/users/:id', auth_1.verifyAuthToken, getActiveOrdersByUser); // Define the GET route for getting all active orders of a user with authentication middleware
+    app.post('/orders', auth_1.verifyAuthToken, create); // Define the POST route for creating a new order with authentication middleware
+    app.get('/orders/:id/products', auth_1.verifyAuthToken, getOrderProducts); // Define the GET route for getting all products of an order with authentication middleware
+    app.put('/orders/:id', auth_1.verifyAuthToken, update); // Define the PUT route for updating an order by ID with authentication middleware
+    app.post('/orders/:id/products', auth_1.verifyAuthToken, addProduct); // Define the POST route for adding a product to an order
 };
 exports["default"] = order_routes;

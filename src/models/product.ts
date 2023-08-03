@@ -50,6 +50,26 @@ export class ProductStore {
         }
     }
 
+    // Function to update a product's information in the database
+    async update(id: number, updatedProduct: Partial<Product>): Promise<Product | null> {
+        try {
+            const conn = await Client.connect();
+            const existingProduct = await this.findById(id);
+
+            if (!existingProduct) {
+                throw new Error(`Product with ID ${id} not found.`);
+            }
+            const mergedProduct: Product = { ...existingProduct, ...updatedProduct };
+            const sql = 'UPDATE products SET name = $1, price = $2, category = $3 WHERE id = $4 RETURNING *';
+            const result = await conn.query(sql, [mergedProduct.name, mergedProduct.price, mergedProduct.category, id]);
+            const product = result.rows[0];
+            conn.release();
+            return product;
+        } catch (err) {
+            throw new Error(`Unable to update product (ID: ${id}): ${err}`);
+        }
+    }
+
     // Function to delete a product from the database by ID
     async delete(id: string): Promise<Product> {
         try {
@@ -65,4 +85,21 @@ export class ProductStore {
             throw new Error(`Could not delete product ${id}: ${err}`)
         }
     }
+
+    // Function to find a product by ID in the database
+    async findById(id: number): Promise<Product | null> {
+        try {
+            const conn = await Client.connect();
+            const sql = 'SELECT * FROM products WHERE id = $1';
+            const result = await conn.query(sql, [id]);
+            conn.release();
+            if (result.rows.length) {
+                return result.rows[0];
+            }
+            return null;
+        } catch (err) {
+            throw new Error(`Unable to find product (ID: ${id}): ${err}`);
+        }
+    }
+
 }

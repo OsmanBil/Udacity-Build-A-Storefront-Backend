@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var product_1 = require("../models/product");
-var users_1 = require("./users");
+var auth_1 = require("./auth");
 var store = new product_1.ProductStore();
 // Route handler to get all products from the database and send them as a JSON response
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -95,22 +95,51 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// Route handler to update a product's information in the database and send back the updated product as a JSON response
+var update = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var productId, productUpdate, updatedProduct, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                productId = parseInt(req.params.id);
+                productUpdate = {
+                    name: req.body.name,
+                    price: req.body.price,
+                    category: req.body.category
+                };
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.update(productId, productUpdate)];
+            case 2:
+                updatedProduct = _a.sent();
+                res.json(updatedProduct);
+                return [3 /*break*/, 4];
+            case 3:
+                err_2 = _a.sent();
+                res.status(400);
+                res.json(err_2);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 // Route handler to delete a product from the database by ID and send back the deleted product as a JSON response
 var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var deleted, err_2;
+    var deleted, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, store["delete"](req.body.id)];
+                return [4 /*yield*/, store["delete"](req.params.id)];
             case 1:
                 deleted = _a.sent();
                 res.json(deleted);
                 return [3 /*break*/, 3];
             case 2:
-                err_2 = _a.sent();
+                err_3 = _a.sent();
                 res.status(400);
-                res.json(err_2);
+                res.json(err_3);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -120,7 +149,8 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 var products_routes = function (app) {
     app.get('/products', index); // Define the GET route for getting all products
     app.get('/products/:id', show); // Define the GET route for getting a specific product by ID
-    app.post('/products', users_1.verifyAuthToken, create); // Define the POST route for creating a new product with authentication middleware
-    app["delete"]('/products', users_1.verifyAuthToken, destroy); // Define the DELETE route for deleting a product with authentication middleware
+    app.post('/products', auth_1.verifyAuthToken, create); // Define the POST route for creating a new product with authentication middleware
+    app.put('/products/:id', auth_1.verifyAuthToken, update); // Define the PUT route for updating a product by ID
+    app["delete"]('/products/:id', auth_1.verifyAuthToken, destroy); // Define the DELETE route for deleting a product with authentication middleware
 };
 exports["default"] = products_routes;
