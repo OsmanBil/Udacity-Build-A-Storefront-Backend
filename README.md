@@ -29,6 +29,8 @@ Before running the backend, you need to set up and connect to the database. Make
     3. Create the tables with:
         db-migrate up
 
+    Please note that the 'database.json' file is not included in the version control to avoid exposing sensitive information. Make sure to update the connection details in the 'database.json' file according to your local database setup before running the migration.
+
 # Backend and Database Ports
 
 The backend server and database may run on different ports. By default, the backend server runs on port 3000, and the database may use its default port 5432 for PostgreSQL.

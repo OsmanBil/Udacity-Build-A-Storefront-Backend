@@ -8,9 +8,7 @@ const store = new OrderStore();
 interface JwtPayload {
   user: {
     id: number;
-    // Add other properties if needed
   };
-  // Add other properties if needed
 }
 
 // Route handler to get all orders from the database and send them as a JSON response

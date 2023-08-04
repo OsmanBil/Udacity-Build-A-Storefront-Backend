@@ -22,14 +22,12 @@ const show = async (req: Request, res: Response) => {
     res.json(user);
   } catch (err: unknown) {
     if (err instanceof Error) {
-      // Zugriff auf err.message ist hier sicher
       if (err.message === `User ${userId} not found`) {
         res.status(404).send(`User ${userId} not found`);
       } else {
         res.status(500).send(err);
       }
     } else {
-      // err ist nicht vom Typ Error
       res.status(500).send('An unexpected error occurred.');
     }
   }
