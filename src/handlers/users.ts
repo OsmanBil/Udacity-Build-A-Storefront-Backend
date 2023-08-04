@@ -10,8 +10,12 @@ const store = new UserStore(); // Create a new instance of the UserStore class
 
 // Route handler to get all users from the database and send them as a JSON response
 const index = async (_req: Request, res: Response) => {
-  const users = await store.index();
-  res.json(users);
+  try {
+    const users = await store.index();
+    res.json(users);
+  } catch (err: unknown) {
+    res.status(500).send('An unexpected error occurred.');
+  }
 };
 
 // Route handler to get a specific user by ID from the database and send it as a JSON response

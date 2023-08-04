@@ -6,15 +6,23 @@ const store = new ProductStore();
 
 // Route handler to get all products from the database and send them as a JSON response
 const index = async (_req: Request, res: Response) => {
-  const products = await store.index();
-  res.json(products);
+  try {
+    const products = await store.index();
+    res.json(products);
+  } catch (err) {
+    res.status(500).send('An unexpected error occurred.');
+  }
 };
 
 // Route handler to get a specific product by ID from the database and send it as a JSON response
 const show = async (req: Request, res: Response) => {
   const productId = req.params.id;
-  const product = await store.show(productId);
-  res.json(product);
+  try {
+    const product = await store.show(productId);
+    res.json(product);
+  } catch (err) {
+    res.status(500).send('An unexpected error occurred.');
+  }
 };
 
 // Route handler to create a new product in the database and send back the newly created product as a JSON response

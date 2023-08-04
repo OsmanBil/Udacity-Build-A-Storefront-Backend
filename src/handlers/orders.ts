@@ -13,14 +13,22 @@ interface JwtPayload {
 
 // Route handler to get all orders from the database and send them as a JSON response
 const index = async (_req: Request, res: Response) => {
-  const orders = await store.index();
-  res.json(orders);
+  try {
+    const orders = await store.index();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).send('An unexpected error occurred.');
+  }
 };
 
 // Route handler to get a specific order by ID from the database and send it as a JSON response
 const show = async (_req: Request, res: Response) => {
-  const order = await store.show(_req.params.id);
-  res.json(order);
+  try {
+    const order = await store.show(_req.params.id);
+    res.json(order);
+  } catch (err) {
+    res.status(500).send('An unexpected error occurred.');
+  }
 };
 
 // Route handler to create a new order in the database and send back the newly created order as a JSON response
