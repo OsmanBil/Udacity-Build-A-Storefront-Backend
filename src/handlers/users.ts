@@ -17,8 +17,22 @@ const index = async (_req: Request, res: Response) => {
 // Route handler to get a specific user by ID from the database and send it as a JSON response
 const show = async (req: Request, res: Response) => {
   const userId = req.params.id;
-  const user = await store.show(userId);
-  res.json(user);
+  try {
+    const user = await store.show(userId);
+    res.json(user);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      // Zugriff auf err.message ist hier sicher
+      if (err.message === `User ${userId} not found`) {
+        res.status(404).send(`User ${userId} not found`);
+      } else {
+        res.status(500).send(err);
+      }
+    } else {
+      // err ist nicht vom Typ Error
+      res.status(500).send('An unexpected error occurred.');
+    }
+  }
 };
 
 // Route handler to create a new user in the database and send back the newly created user as a JSON response

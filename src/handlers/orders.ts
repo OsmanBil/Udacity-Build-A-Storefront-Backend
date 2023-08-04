@@ -5,6 +5,14 @@ import { verifyAuthToken as authMiddleware } from './auth';
 
 const store = new OrderStore();
 
+interface JwtPayload {
+  user: {
+    id: number;
+    // Add other properties if needed
+  };
+  // Add other properties if needed
+}
+
 // Route handler to get all orders from the database and send them as a JSON response
 const index = async (_req: Request, res: Response) => {
   const orders = await store.index();
@@ -24,9 +32,17 @@ const create = async (req: Request, res: Response) => {
     user_id: 0,
   };
   try {
-    const authorizationHeader: any = req.headers.authorization;
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+      res.status(401);
+      res.json('Access denied, no token provided');
+      return;
+    }
     const token = authorizationHeader.split(' ')[1];
-    const decoded: any = jwt.verify(token, process.env.TOKEN_SECRET as string);
+    const decoded: JwtPayload = jwt.verify(
+      token,
+      process.env.TOKEN_SECRET as string,
+    ) as JwtPayload;
 
     if (decoded && decoded.user && decoded.user.id) {
       order.user_id = decoded.user.id;

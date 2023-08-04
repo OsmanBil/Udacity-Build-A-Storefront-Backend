@@ -33,6 +33,11 @@ export class UserStore {
       const conn = await Client.connect();
       const result = await conn.query(sql, [id]);
       conn.release();
+
+      if (result.rows.length === 0) {
+        throw new Error(`User ${id} not found`);
+      }
+
       return result.rows[0];
     } catch (err) {
       throw new Error(`Could not find user ${id}: ${err}`);
@@ -42,6 +47,9 @@ export class UserStore {
   // Function to create a new user in the database
   async create(u: User): Promise<User> {
     try {
+      if (!u.username || !u.password) {
+        throw new Error('Username and password are required.');
+      }
       const conn = await Client.connect();
       const sql =
         'INSERT INTO users (firstName, lastName, username, password) VALUES($1, $2, $3, $4) RETURNING *';
