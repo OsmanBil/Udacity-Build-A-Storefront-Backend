@@ -1,6 +1,9 @@
 import supertest from 'supertest';
 import app from '../server';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { Order, OrderStore } from '../models/order';
+import { Product, ProductStore } from '../models/product';
+import { UserStore } from '../models/user';
 
 type DecodedToken = string | JwtPayload | null;
 
@@ -219,6 +222,212 @@ describe('Test endpoint responses', () => {
         .delete(`/products/${productId}`)
         .set('Authorization', `Bearer ${token}`);
       expect(response.status).toBe(200);
+    });
+  });
+
+  describe('Order Model', () => {
+    const store = new OrderStore();
+    let testOrder: Order;
+
+    // Test for the index method
+    it('should have an index method', () => {
+      expect(typeof store.index).toBe('function');
+    });
+
+    it('index method should return a list of orders', async () => {
+      const result = await store.index();
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+    });
+
+    // Test for the create method
+    it('should have a create method', () => {
+      expect(typeof store.create).toBe('function');
+    });
+
+    it('create method should add an order', async () => {
+      testOrder = await store.create({
+        user_id: 1,
+        status: 'active',
+      } as Order);
+
+      expect(testOrder).toBeDefined();
+      expect(testOrder.user_id).toBe(1);
+      expect(testOrder.status).toBe('active');
+    });
+
+    // Test for the update method
+    it('should have an update method', () => {
+      expect(typeof store.update).toBe('function');
+    });
+
+    it('update method should update the status of an order', async () => {
+      const updatedOrder = await store.update(testOrder.id!, {
+        status: 'complete',
+      });
+
+      expect(updatedOrder).toBeDefined();
+      expect(updatedOrder.id).toBe(testOrder.id);
+      expect(updatedOrder.status).toBe('complete');
+    });
+
+    // Test for the show method
+    it('should have a show method', () => {
+      expect(typeof store.show).toBe('function');
+    });
+
+    it('show method should return the correct order', async () => {
+      const result = await store.show(`${testOrder.id}`);
+
+      expect(result).toBeDefined();
+      expect(result.id).toBe(testOrder.id);
+      expect(result.user_id).toBe(1);
+      expect(result.status).toBe('complete');
+    });
+
+    // Test for the addProduct method
+    it('should have an addProduct method', () => {
+      expect(typeof store.addProduct).toBe('function');
+    });
+  });
+
+  describe('Product Model', () => {
+    const store = new ProductStore();
+    let testProduct: Product;
+
+    // Test for the index method
+    it('should have an index method', () => {
+      expect(typeof store.index).toBe('function');
+    });
+
+    it('index method should return a list of products', async () => {
+      const result = await store.index();
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+    });
+
+    // Test for the create method
+    it('should have a create method', () => {
+      expect(typeof store.create).toBe('function');
+    });
+
+    it('create method should add a product', async () => {
+      testProduct = await store.create({
+        name: 'Test Product',
+        price: 100,
+        category: 'Test Category',
+      });
+
+      expect(testProduct).toBeDefined();
+      expect(testProduct.name).toBe('Test Product');
+      expect(testProduct.category).toBe('Test Category');
+    });
+
+    // Test for the show method
+    it('should have a show method', () => {
+      expect(typeof store.show).toBe('function');
+    });
+
+    it('show method should return the correct product', async () => {
+      const result = await store.show(`${testProduct.id}`);
+
+      expect(result).toBeDefined();
+      expect(result.id).toBe(testProduct.id);
+      expect(result.name).toBe('Test Product');
+      expect(result.category).toBe('Test Category');
+    });
+
+    // Test for the update method
+    it('should have an update method', () => {
+      expect(typeof store.update).toBe('function');
+    });
+
+    it('should have an update method', () => {
+      expect(typeof store.update).toBe('function');
+    });
+
+    it('update method should update the product details', async () => {
+      const updatedProduct = await store.update(testProduct.id!, {
+        name: 'Updated Product',
+        price: 150,
+        category: 'Updated Category',
+      });
+
+      if (updatedProduct !== null) {
+        expect(updatedProduct).toBeDefined();
+        expect(updatedProduct.id).toBe(testProduct.id);
+        expect(updatedProduct.name).toBe('Updated Product');
+        expect(updatedProduct.category).toBe('Updated Category');
+      } else {
+        throw new Error('Updated product is null');
+      }
+    });
+
+    // Test for the delete method
+    it('should have a delete method', () => {
+      expect(typeof store.delete).toBe('function');
+    });
+  });
+
+  describe('User Model', () => {
+    const store = new UserStore();
+    let userId: number;
+
+    it('should have an index method', () => {
+      expect(typeof store.index).toBe('function');
+    });
+
+    it('index method should return a list of users', async () => {
+      const result = await store.index();
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('should have a show method', () => {
+      expect(typeof store.show).toBe('function');
+    });
+
+    it('should have a create method', () => {
+      expect(typeof store.create).toBe('function');
+    });
+
+    it('create method should add a user', async () => {
+      const result = await store.create({
+        firstName: 'Test',
+        lastName: 'User',
+        username: 'testuser',
+        password: 'password123',
+      });
+      expect(result).toBeDefined();
+      if (result) {
+        expect(result.username).toBe('testuser');
+        userId = result.id!;
+      }
+    });
+
+    it('should have an update method', () => {
+      expect(typeof store.update).toBe('function');
+    });
+
+    it('update method should update a user', async () => {
+      const result = await store.update(userId, {
+        firstName: 'Updated',
+        lastName: 'User',
+        username: 'updateduser',
+        password: 'newpassword123',
+      });
+      expect(result).toBeDefined();
+      if (result) {
+        expect(result.username).toBe('updateduser');
+      }
+    });
+
+    it('should have a delete method', () => {
+      expect(typeof store.delete).toBe('function');
+    });
+
+    it('should have an authenticate method', () => {
+      expect(typeof store.authenticate).toBe('function');
     });
   });
 
